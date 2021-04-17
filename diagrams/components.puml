@@ -1,0 +1,22 @@
+@startuml
+
+Title Component diagram
+
+queue "Kafka" as K
+interface "Logs" as L
+interface "Payment API" as PA
+database "Database" as DB
+rectangle "Payment dispatcher" as PD
+rectangle "Payment processor" as PP
+rectangle "Payment updater" as PU
+
+K <- PD: consume
+PD -> PP: process
+PD --> L: log
+PP -> PA: check
+PP -> L: log
+PP --> PU: update
+PU -> DB: update
+L <- PU: log
+
+@enduml

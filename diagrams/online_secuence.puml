@@ -1,0 +1,39 @@
+@startuml
+
+Title Online payment flow
+
+participant "Payment dispatcher" as PD
+queue "Kafka" as K
+participant "Payment processor" as PP
+participant "Payment API" as PA
+participant "Payment updater" as PU
+database "Database" as DB
+
+PD -> K: consume
+activate PD
+activate K
+K --> PD: mesasge
+deactivate K
+PD -> PP: process
+activate PP
+PP -> PA: check payment
+activate PA
+PA --> PP: check ok
+deactivate PA
+PP -> PU: update payment
+activate PU
+PU -> DB: update payment
+activate DB
+DB --> PU: update ok
+deactivate DB
+PU --> PP: update ok
+deactivate PU
+PP --> PD: process ok
+deactivate PP
+PD -> K: commit
+activate K
+K --> PD
+deactivate K
+deactivate PD
+
+@enduml

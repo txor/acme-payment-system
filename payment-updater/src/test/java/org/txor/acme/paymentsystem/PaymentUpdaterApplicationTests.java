@@ -1,13 +1,13 @@
-package org.txor.acmepaymentssystem;
+package org.txor.acme.paymentsystem;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class AcmePaymentsSystemApplicationTests {
+class PaymentUpdaterApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
+    @Test
+    void contextLoads() {
+    }
 
 }

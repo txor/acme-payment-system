@@ -1,13 +1,13 @@
-package org.txor.acmepaymentssystem;
+package org.txor.acme.paymentsystem;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class AcmePaymentsSystemApplication {
+public class PaymentProcessorApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(AcmePaymentsSystemApplication.class, args);
+		SpringApplication.run(PaymentProcessorApplication.class, args);
 	}
 
 }
