@@ -11,11 +11,11 @@ public class PaymentEntity {
     @Id
     private String paymentId;
 
-    public String getId() {
+    public String getPaymentId() {
         return null;
     }
 
-    public String getAccountId() {
+    public AccountEntity getAccount() {
         return null;
     }
 
@@ -28,10 +28,6 @@ public class PaymentEntity {
     }
 
     public String getAmount() {
-        return null;
-    }
-
-    public AccountEntity getAccount() {
         return null;
     }
 }

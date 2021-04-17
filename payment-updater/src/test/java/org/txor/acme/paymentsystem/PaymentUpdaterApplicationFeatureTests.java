@@ -11,7 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.txor.acme.paymentsystem.persistence.PaymentEntity;
-import org.txor.acme.paymentsystem.testutils.PaymentDatabaseTestClient;
+import org.txor.acme.paymentsystem.testutils.PaymentTestRepository;
 
 import java.time.Instant;
 import java.util.Optional;
@@ -28,7 +28,7 @@ class PaymentUpdaterApplicationFeatureTests {
     private TestRestTemplate restTemplate;
 
     @Autowired
-    private PaymentDatabaseTestClient paymentDatabaseTestClient;
+    private PaymentTestRepository paymentTestRepository;
 
     @Test
     void storePaymentDataAndUpdateAccountLastPaymentDateOnDatabase() {
@@ -53,15 +53,15 @@ class PaymentUpdaterApplicationFeatureTests {
                 .postForEntity("http://localhost:" + port + "/update", requestEntity, String.class);
 
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-        Optional<PaymentEntity> persistedPayment = this.paymentDatabaseTestClient.findById(paymentId);
-        assertThat(persistedPayment).map(PaymentEntity::getId).hasValue(paymentId);
+        Optional<PaymentEntity> persistedPayment = this.paymentTestRepository.findById(paymentId);
+        assertThat(persistedPayment).map(PaymentEntity::getPaymentId).hasValue(paymentId);
         assertThat(persistedPayment).map(PaymentEntity::getPaymentType).hasValue(paymentType);
         assertThat(persistedPayment).map(PaymentEntity::getCreditCard).hasValue(creditCard);
         assertThat(persistedPayment).map(PaymentEntity::getAmount).hasValue(amount);
-        assertThat(persistedPayment).map(payment -> payment.getAccount().getId()).hasValue(accountId);
+        assertThat(persistedPayment).map(payment -> payment.getAccount().getAccountId()).hasValue(accountId);
         assertThat(persistedPayment).map(PaymentEntity::getAccount).hasValueSatisfying(
                 account -> {
-                    assertThat(account.getId()).isEqualTo(accountId);
+                    assertThat(account.getAccountId()).isEqualTo(accountId);
                     assertThat(account.getLastPaymentDate()).isAfter(updateTime);
                 }
         );
