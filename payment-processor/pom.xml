@@ -12,6 +12,8 @@
     <name>payment-processor</name>
     <description>Implements the processing logic of a payment</description>
     <artifactId>payment-processor</artifactId>
+    <groupId>org.txor.acme</groupId>
+    <version>0.0.1-SNAPSHOT</version>
 
     <properties>
         <java.version>1.8</java.version>
@@ -34,6 +36,34 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>docker-package</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>docker</executable>
+                            <workingDirectory>${project.basedir}</workingDirectory>
+                            <arguments>
+                                <argument>build</argument>
+                                <argument>.</argument>
+                                <argument>-t</argument>
+                                <argument>${project.artifactId}:${project.version}</argument>
+                                <argument>--build-arg</argument>
+                                <argument>
+                                    JAR_FILE=./target/${project.artifactId}-${project.version}.jar
+                                </argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
