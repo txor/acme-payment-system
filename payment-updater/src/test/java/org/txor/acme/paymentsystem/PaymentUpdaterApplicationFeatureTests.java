@@ -68,4 +68,31 @@ class PaymentUpdaterApplicationFeatureTests {
         );
     }
 
+    @Test
+    void doNotUpdateDataWhenTheAccountDoesNotExist() {
+        long paymentId = 5678L;
+        long accountId = 999L; // Non existing account
+        String paymentType = "online";
+        String creditCard = "4242424242424242";
+        long amount = 543L;
+        Instant updateTime = Instant.now();
+        String jsonRequest = "{\n" +
+                "  \"paymentId\": \"" + paymentId + "\",\n" +
+                "  \"accountId\": \"" + accountId + "\",\n" +
+                "  \"paymentType\": \"" + paymentType + "\",\n" +
+                "  \"creditCard\": \"" + creditCard + "\",\n" +
+                "  \"amount\": \"" + amount + "\"\n" +
+                "}";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> requestEntity = new HttpEntity<>(jsonRequest, headers);
+        ResponseEntity<String> result = this.restTemplate
+                .postForEntity("http://localhost:" + port + "/update", requestEntity, String.class);
+
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        Optional<PaymentEntity> persistedPayment = this.paymentTestRepository.findById(paymentId);
+        assertThat(persistedPayment).isEmpty();
+    }
+
 }
