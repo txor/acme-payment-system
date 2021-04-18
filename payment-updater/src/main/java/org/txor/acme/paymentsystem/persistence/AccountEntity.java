@@ -11,9 +11,19 @@ public class AccountEntity {
 
     @Id
     private Long accountId;
+    private String name;
+    private String email;
+    private Instant birthdate;
+
+    protected AccountEntity() {
+    }
+
+    public AccountEntity(Long accountId) {
+        this.accountId = accountId;
+    }
 
     public Long getAccountId() {
-        return null;
+        return accountId;
     }
 
     public Instant getLastPaymentDate() {

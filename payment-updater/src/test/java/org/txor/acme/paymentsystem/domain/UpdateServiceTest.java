@@ -3,6 +3,7 @@ package org.txor.acme.paymentsystem.domain;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -18,7 +19,7 @@ class UpdateServiceTest {
         Long accountId = 1234L;
         Payment payment = new Payment(4312L, accountId, "online", "4111111111111111", 195L);
         AccountRepository accountRepository = mock(AccountRepository.class);
-        when(accountRepository.loadAccount(anyLong())).thenReturn(new Account(accountId));
+        when(accountRepository.loadAccount(anyLong())).thenReturn(Optional.of(new Account(accountId)));
         PaymentRepository paymentRepository = mock(PaymentRepository.class);
         UpdateService updateService = new UpdateService(paymentRepository, accountRepository);
 
