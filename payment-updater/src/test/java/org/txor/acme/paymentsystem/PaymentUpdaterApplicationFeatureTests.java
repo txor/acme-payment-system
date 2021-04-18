@@ -39,10 +39,10 @@ class PaymentUpdaterApplicationFeatureTests {
         String amount = "543";
         Instant updateTime = Instant.now();
         String jsonRequest = "{\n" +
-                "  \"payment_id\": \"" + paymentId + "\",\n" +
-                "  \"account_id\": \"" + accountId + "\",\n" +
-                "  \"payment_type\": \"" + paymentType + "\",\n" +
-                "  \"credit_card\": \"" + creditCard + "\",\n" +
+                "  \"paymentId\": \"" + paymentId + "\",\n" +
+                "  \"accountId\": \"" + accountId + "\",\n" +
+                "  \"paymentType\": \"" + paymentType + "\",\n" +
+                "  \"creditCard\": \"" + creditCard + "\",\n" +
                 "  \"amount\": \"" + amount + "\"\n" +
                 "}";
 
@@ -54,6 +54,7 @@ class PaymentUpdaterApplicationFeatureTests {
 
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
         Optional<PaymentEntity> persistedPayment = this.paymentTestRepository.findById(paymentId);
+        assertThat(persistedPayment).isPresent();
         assertThat(persistedPayment).map(PaymentEntity::getPaymentId).hasValue(paymentId);
         assertThat(persistedPayment).map(PaymentEntity::getPaymentType).hasValue(paymentType);
         assertThat(persistedPayment).map(PaymentEntity::getCreditCard).hasValue(creditCard);
