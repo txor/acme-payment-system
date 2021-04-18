@@ -2,6 +2,8 @@ package org.txor.acme.paymentsystem.persistence;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -10,7 +12,9 @@ public class PaymentEntity {
 
     @Id
     private Long paymentId;
-    private Long accountId;
+    @ManyToOne
+    @JoinColumn(name = "account_id")
+    private AccountEntity accountId;
     private String paymentType;
     private String creditCard;
     private Long amount;
@@ -18,7 +22,7 @@ public class PaymentEntity {
     protected PaymentEntity() {
     }
 
-    public PaymentEntity(Long paymentId, Long accountId, String paymentType, String creditCard, Long amount) {
+    public PaymentEntity(Long paymentId, AccountEntity accountId, String paymentType, String creditCard, Long amount) {
 
         this.paymentId = paymentId;
         this.accountId = accountId;
@@ -32,7 +36,7 @@ public class PaymentEntity {
     }
 
     public AccountEntity getAccount() {
-        return new AccountEntity(accountId);
+        return accountId;
     }
 
     public String getPaymentType() {

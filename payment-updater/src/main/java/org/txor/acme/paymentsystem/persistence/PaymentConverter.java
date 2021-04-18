@@ -7,6 +7,6 @@ import org.txor.acme.paymentsystem.domain.Payment;
 public class PaymentConverter {
 
     public PaymentEntity convert(Payment payment) {
-        return new PaymentEntity(payment.getPaymentId(), payment.getAccountId(), payment.getPaymentType(), payment.getCreditCard(), payment.getAmount());
+        return new PaymentEntity(payment.getPaymentId(), new AccountEntity(payment.getAccountId()), payment.getPaymentType(), payment.getCreditCard(), payment.getAmount());
     }
 }

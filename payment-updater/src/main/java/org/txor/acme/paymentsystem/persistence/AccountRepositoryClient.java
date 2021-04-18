@@ -26,7 +26,12 @@ public class AccountRepositoryClient implements AccountRepository {
     }
 
     @Override
-    public void updateLastPaymentDate(Long accountId, Instant any) {
-
+    public void updateLastPaymentDate(Long accountId, Instant paymentDate) {
+        accountDatabaseRepository.findById(accountId).map(
+                account -> {
+                    account.setLastPaymentDate(paymentDate);
+                    return accountDatabaseRepository.save(account);
+                }
+        );
     }
 }

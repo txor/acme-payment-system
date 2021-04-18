@@ -23,7 +23,7 @@ class PaymentRepositoryClientTest {
     @Test
     public void saveShouldConvertAndPersistTheGivenPayment() {
         Payment payment = new Payment(1234L, 4321L, "offline", "4242424242424242", 60L);
-        PaymentEntity paymentEntity = new PaymentEntity(1234L, 4321L, "offline", "4242424242424242", 60L);
+        PaymentEntity paymentEntity = new PaymentEntity(1234L, new AccountEntity(4321L), "offline", "4242424242424242", 60L);
         when(paymentConverter.convert(any(Payment.class))).thenReturn(paymentEntity);
         PaymentRepositoryClient paymentRepositoryClient = new PaymentRepositoryClient(paymentDatabaseRepository, paymentConverter);
 

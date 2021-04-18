@@ -14,6 +14,7 @@ public class AccountEntity {
     private String name;
     private String email;
     private Instant birthdate;
+    private Instant lastPaymentDate;
 
     protected AccountEntity() {
     }
@@ -27,6 +28,10 @@ public class AccountEntity {
     }
 
     public Instant getLastPaymentDate() {
-        return null;
+        return lastPaymentDate;
+    }
+
+    public void setLastPaymentDate(Instant paymentDate) {
+        this.lastPaymentDate = paymentDate;
     }
 }
