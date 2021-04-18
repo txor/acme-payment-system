@@ -1,4 +1,4 @@
-package org.txor.acme.paymentsystem.persistence;
+package org.txor.acme.paymentsystem.repository;
 
 import org.junit.jupiter.api.Test;
 import org.txor.acme.paymentsystem.domain.Account;

@@ -1,4 +1,4 @@
-package org.txor.acme.paymentsystem.persistence;
+package org.txor.acme.paymentsystem.repository;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;

@@ -1,4 +1,4 @@
-package org.txor.acme.paymentsystem.persistence;
+package org.txor.acme.paymentsystem.repository;
 
 import org.springframework.data.repository.CrudRepository;
 

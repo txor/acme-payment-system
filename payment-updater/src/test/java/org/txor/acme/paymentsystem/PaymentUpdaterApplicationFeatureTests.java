@@ -10,7 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.txor.acme.paymentsystem.persistence.PaymentEntity;
+import org.txor.acme.paymentsystem.repository.PaymentEntity;
 import org.txor.acme.paymentsystem.testutils.PaymentTestRepository;
 
 import java.time.Instant;
