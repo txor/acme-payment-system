@@ -32,8 +32,8 @@ class PaymentUpdaterApplicationFeatureTests {
 
     @Test
     void storePaymentDataAndUpdateAccountLastPaymentDateOnDatabase() {
-        String paymentId = "1234";
-        String accountId = "4321";
+        Long paymentId = 1234L;
+        Long accountId = 4321L;
         String paymentType = "online";
         String creditCard = "4242424242424242";
         String amount = "543";

@@ -2,13 +2,13 @@ package org.txor.acme.paymentsystem.domain;
 
 public class Payment {
 
-    private final String paymentId;
+    private final Long paymentId;
     private final Long accountId;
     private final String paymentType;
     private final String creditCard;
-    private final String amount;
+    private final Long amount;
 
-    public Payment(String paymentId, Long accountId, String paymentType, String creditCard, String amount) {
+    public Payment(Long paymentId, Long accountId, String paymentType, String creditCard, Long amount) {
         this.paymentId = paymentId;
         this.accountId = accountId;
         this.paymentType = paymentType;
@@ -16,7 +16,7 @@ public class Payment {
         this.amount = amount;
     }
 
-    public String getPaymentId() {
+    public Long getPaymentId() {
         return paymentId;
     }
 
@@ -32,7 +32,7 @@ public class Payment {
         return creditCard;
     }
 
-    public String getAmount() {
+    public Long getAmount() {
         return amount;
     }
 }

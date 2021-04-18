@@ -9,9 +9,9 @@ import javax.persistence.Table;
 public class PaymentEntity {
 
     @Id
-    private String paymentId;
+    private Long paymentId;
 
-    public String getPaymentId() {
+    public Long getPaymentId() {
         return null;
     }
 

@@ -10,9 +10,9 @@ import java.time.Instant;
 public class AccountEntity {
 
     @Id
-    private String accountId;
+    private Long accountId;
 
-    public String getAccountId() {
+    public Long getAccountId() {
         return null;
     }
 
