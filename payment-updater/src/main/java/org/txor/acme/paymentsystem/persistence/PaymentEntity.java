@@ -10,24 +10,40 @@ public class PaymentEntity {
 
     @Id
     private Long paymentId;
+    private Long accountId;
+    private String paymentType;
+    private String creditCard;
+    private Long amount;
+
+    protected PaymentEntity() {
+    }
+
+    public PaymentEntity(Long paymentId, Long accountId, String paymentType, String creditCard, Long amount) {
+
+        this.paymentId = paymentId;
+        this.accountId = accountId;
+        this.paymentType = paymentType;
+        this.creditCard = creditCard;
+        this.amount = amount;
+    }
 
     public Long getPaymentId() {
-        return null;
+        return paymentId;
     }
 
     public AccountEntity getAccount() {
-        return null;
+        return new AccountEntity(accountId);
     }
 
     public String getPaymentType() {
-        return null;
+        return paymentType;
     }
 
     public String getCreditCard() {
-        return null;
+        return creditCard;
     }
 
-    public String getAmount() {
-        return null;
+    public Long getAmount() {
+        return amount;
     }
 }

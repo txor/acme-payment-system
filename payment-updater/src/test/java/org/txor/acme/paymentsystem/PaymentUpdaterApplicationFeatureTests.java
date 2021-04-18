@@ -32,11 +32,11 @@ class PaymentUpdaterApplicationFeatureTests {
 
     @Test
     void storePaymentDataAndUpdateAccountLastPaymentDateOnDatabase() {
-        Long paymentId = 1234L;
-        Long accountId = 1L;
+        long paymentId = 1234L;
+        long accountId = 1L;
         String paymentType = "online";
         String creditCard = "4242424242424242";
-        String amount = "543";
+        long amount = 543L;
         Instant updateTime = Instant.now();
         String jsonRequest = "{\n" +
                 "  \"paymentId\": \"" + paymentId + "\",\n" +
