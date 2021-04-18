@@ -1,5 +1,7 @@
 package org.txor.acme.paymentsystem.domain;
 
+import java.time.Instant;
+
 public class UpdateService {
 
     private final PaymentRepository paymentRepository;
@@ -11,5 +13,8 @@ public class UpdateService {
     }
 
     public void update(Payment payment) {
+        Account account = accountRepository.loadAccount(payment.getAccountId());
+        paymentRepository.savePayment(payment);
+        accountRepository.updateLastPaymentDate(account.getAccountId(), Instant.now());
     }
 }
