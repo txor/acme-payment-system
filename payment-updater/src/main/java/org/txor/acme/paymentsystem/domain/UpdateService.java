@@ -2,6 +2,7 @@ package org.txor.acme.paymentsystem.domain;
 
 import org.txor.acme.paymentsystem.domain.exceptions.AccountNotFoundException;
 
+import javax.transaction.Transactional;
 import java.time.Instant;
 
 public class UpdateService {
@@ -14,6 +15,7 @@ public class UpdateService {
         this.accountRepository = accountRepository;
     }
 
+    @Transactional
     public void update(Payment payment) {
         accountRepository.loadAccount(payment.getAccountId()).map(
                 account -> {
