@@ -2,9 +2,8 @@
 
 Title Offline payment flow
 
-participant "Payment dispatcher" as PD
 queue "Kafka" as K
-participant "Payment processor" as PP
+participant "Payment dispatcher" as PD
 participant "Payment updater" as PU
 database "Database" as DB
 
@@ -13,18 +12,14 @@ activate PD
 activate K
 K --> PD: mesasge
 deactivate K
-PD -> PP: process
-activate PP
-PP -> PU: update payment
+PD -> PU: process
 activate PU
 PU -> DB: update payment
 activate DB
 DB --> PU: update ok
 deactivate DB
-PU --> PP: update ok
+PU --> PD: update ok
 deactivate PU
-PP --> PD: process ok
-deactivate PP
 PD -> K: commit
 activate K
 K --> PD

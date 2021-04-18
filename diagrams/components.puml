@@ -7,11 +7,12 @@ interface "Logs" as L
 interface "Payment API" as PA
 database "Database" as DB
 rectangle "Payment dispatcher" as PD
-rectangle "Payment processor" as PP
+rectangle "Payment checker" as PP
 rectangle "Payment updater" as PU
 
 K <- PD: consume
-PD -> PP: process
+PD -> PP: update
+PD -> PU: update
 PD --> L: log
 PP -> PA: check
 PP -> L: log

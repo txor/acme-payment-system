@@ -2,11 +2,11 @@
 
 Title Online payment flow
 
-participant "Payment dispatcher" as PD
 queue "Kafka" as K
-participant "Payment processor" as PP
-participant "Payment API" as PA
+participant "Payment dispatcher" as PD
+participant "Payment checker" as PP
 participant "Payment updater" as PU
+participant "Payment API" as PA
 database "Database" as DB
 
 PD -> K: consume
@@ -14,7 +14,7 @@ activate PD
 activate K
 K --> PD: mesasge
 deactivate K
-PD -> PP: process
+PD -> PP: update
 activate PP
 PP -> PA: check payment
 activate PA
@@ -22,13 +22,13 @@ PA --> PP: check ok
 deactivate PA
 PP -> PU: update payment
 activate PU
-PU -> DB: update payment
+PU -> DB: persist payment
 activate DB
-DB --> PU: update ok
+DB --> PU: ok
 deactivate DB
 PU --> PP: update ok
 deactivate PU
-PP --> PD: process ok
+PP --> PD: update ok
 deactivate PP
 PD -> K: commit
 activate K
