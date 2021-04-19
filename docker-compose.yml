@@ -8,8 +8,8 @@ services:
 
   payment-dispatcher:
     image: payment-dispatcher:0.0.1-SNAPSHOT
-  payment-processor:
-    image: payment-processor:0.0.1-SNAPSHOT
+  payment-checker:
+    image: payment-checker:0.0.1-SNAPSHOT
   payment-updater:
     image: payment-updater:0.0.1-SNAPSHOT
 

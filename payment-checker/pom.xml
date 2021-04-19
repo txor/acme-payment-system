@@ -9,9 +9,9 @@
         <relativePath/>
     </parent>
 
-    <name>payment-processor</name>
-    <description>Implements the processing logic of a payment</description>
-    <artifactId>payment-processor</artifactId>
+    <name>payment-checker</name>
+    <description>Checks tha an online payment is OK and then forwards the data to payment-updater</description>
+    <artifactId>payment-checker</artifactId>
     <groupId>org.txor.acme</groupId>
     <version>0.0.1-SNAPSHOT</version>
 

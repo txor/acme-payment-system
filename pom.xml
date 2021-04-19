@@ -12,8 +12,8 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>payment-checker</module>
         <module>payment-dispatcher</module>
-        <module>payment-processor</module>
         <module>payment-updater</module>
     </modules>
 </project>
