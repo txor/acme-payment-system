@@ -8,7 +8,7 @@ public class DispatchService {
         this.apiClient = apiClient;
     }
 
-    public void dispatch(String message) {
+    public void dispatch(Payment message) {
         apiClient.sendUpdateData(message);
     }
 
