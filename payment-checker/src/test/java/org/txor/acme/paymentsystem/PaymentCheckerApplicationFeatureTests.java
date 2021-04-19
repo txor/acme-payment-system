@@ -40,7 +40,7 @@ class PaymentCheckerApplicationFeatureTests {
     public void getAPaymentUpdateThenCheckThatIsOkInThePaymentApiThenSendToUpdateApi() throws Exception {
         String paymentId = "1234";
         String accountId = "836";
-        String paymentType = "type";
+        String paymentType = "online";
         String creditCard = "632456";
         String amount = "52";
         String paymentJsonRequest = createJsonRequest(paymentId, accountId, paymentType, creditCard, amount);
