@@ -9,8 +9,8 @@ import static org.mockito.Mockito.verify;
 class DispatchServiceTest {
 
     @Test
-    public void dispatchShouldSendTheReceivedPayment() {
-        Payment payment = new Payment();
+    public void dispatchShouldSendTheReceivedPayment() throws InvalidPaymentException {
+        Payment payment = new Payment("1234", "836", "type", "632456", "52");
         ApiClient apiClient = mock(ApiClient.class);
         DispatchService dispatchService = new DispatchService(apiClient);
 
