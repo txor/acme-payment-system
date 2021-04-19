@@ -46,7 +46,7 @@ class PaymentCheckerApplicationFeatureTests {
         String paymentJsonRequest = createJsonRequest(paymentId, accountId, paymentType, creditCard, amount);
         WireMockServer paymentApiMockServer = new WireMockServer(checkPort);
         paymentApiMockServer.start();
-        paymentApiMockServer.givenThat(WireMock.post(urlPathEqualTo("/update"))
+        paymentApiMockServer.givenThat(WireMock.post(urlPathEqualTo("/check"))
                 .withRequestBody(equalToJson(paymentJsonRequest))
                 .willReturn(ok()));
         WireMockServer updateApiMockServer = new WireMockServer(updatePort);
@@ -60,7 +60,7 @@ class PaymentCheckerApplicationFeatureTests {
                 .content(paymentJsonRequest))
                 .andExpect(status().isOk());
 
-        paymentApiMockServer.verify(exactly(1), postRequestedFor(urlPathEqualTo("/update")));
+        paymentApiMockServer.verify(exactly(1), postRequestedFor(urlPathEqualTo("/check")));
         paymentApiMockServer.stop();
         updateApiMockServer.verify(exactly(1), postRequestedFor(urlPathEqualTo("/update")));
         updateApiMockServer.stop();

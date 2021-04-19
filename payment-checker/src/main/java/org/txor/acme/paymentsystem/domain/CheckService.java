@@ -11,7 +11,9 @@ public class CheckService {
     }
 
     public void check(Payment payment) {
-        checkApiClient.checkPayment(payment);
-        updateApiClient.updatePayment(payment);
+        PaymentStatus paymentStatus = checkApiClient.checkPayment(payment);
+        if (!PaymentStatus.KO.equals(paymentStatus)) {
+            updateApiClient.updatePayment(payment);
+        }
     }
 }

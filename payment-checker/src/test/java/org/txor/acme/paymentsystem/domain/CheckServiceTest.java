@@ -1,17 +1,26 @@
 package org.txor.acme.paymentsystem.domain;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class CheckServiceTest {
+
+    @Mock
+    private CheckApiClient checkApiClient;
+
+    @Mock
+    private UpdateApiClient updateApiClient;
 
     @Test
     public void shouldCheckThaPaymentAndIfOkSendItToUpdating() {
-        CheckApiClient checkApiClient = mock(CheckApiClient.class);
-        UpdateApiClient updateApiClient = mock(UpdateApiClient.class);
         Payment payment = new Payment();
         CheckService checkService = new CheckService(checkApiClient, updateApiClient);
 
@@ -19,5 +28,17 @@ class CheckServiceTest {
 
         verify(checkApiClient).checkPayment(any(Payment.class));
         verify(updateApiClient).updatePayment(any(Payment.class));
+    }
+
+    @Test
+    public void shouldNotSendThePaymentToUpdatingOnPaymentCheckFail() {
+        Payment payment = new Payment();
+        when(checkApiClient.checkPayment(any(Payment.class))).thenReturn(PaymentStatus.KO);
+        CheckService checkService = new CheckService(checkApiClient, updateApiClient);
+
+        checkService.check(payment);
+
+        verify(checkApiClient).checkPayment(any(Payment.class));
+        verifyNoInteractions(updateApiClient);
     }
 }
