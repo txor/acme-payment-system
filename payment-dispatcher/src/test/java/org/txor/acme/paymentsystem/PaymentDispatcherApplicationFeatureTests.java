@@ -5,11 +5,16 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.test.context.EmbeddedKafka;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.concurrent.TimeUnit;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
-import static org.springframework.http.HttpStatus.OK;
 
 @SpringBootTest
 @EmbeddedKafka(partitions = 1, brokerProperties = {"listeners=PLAINTEXT://localhost:9092", "port=9092"})
@@ -18,6 +23,9 @@ class PaymentDispatcherApplicationFeatureTests {
     @Value("${payment-dispatcher.topic}")
     private String topic;
 
+    @Value("${payment-dispatcher.update.host}")
+    private String host;
+
     @Value("${payment-dispatcher.update.port}")
     private Integer port;
 
@@ -25,7 +33,7 @@ class PaymentDispatcherApplicationFeatureTests {
     private KafkaTemplate<String, String> kafkaTemplate;
 
     @Test
-    public void getMessageAndSendAnUpdateRequest() {
+    public void getMessageAndSendAnUpdateRequest() throws InterruptedException {
         String paymentId = "1234";
         String accountId = "836";
         String paymentType = "type";
@@ -37,23 +45,26 @@ class PaymentDispatcherApplicationFeatureTests {
                 "\"account_id\": " + accountId + ", " +
                 "\"payment_type\": \"" + paymentType + "\", " +
                 "\"credit_card\": \"" + creditCard + "\", " +
-                "\"amount\": " + creditCard + ", " +
+                "\"amount\": " + amount + ", " +
                 "\"delay\": " + delay + "}";
-        String jsonRequest = "{\n" +
-                "  \"payment_id\": \"" + paymentId + "\",\n" +
-                "  \"account_id\": \"" + accountId + "\",\n" +
-                "  \"payment_type\": \"" + paymentType + "\",\n" +
-                "  \"credit_card\": \"" + creditCard + "\",\n" +
-                "  \"amount\": \"" + amount + "\"\n" +
+        String jsonRequest = "{" +
+                "\"payment_id\":\"" + paymentId + "\"," +
+                "\"account_id\":\"" + accountId + "\"," +
+                "\"payment_type\":\"" + paymentType + "\"," +
+                "\"credit_card\":\"" + creditCard + "\"," +
+                "\"amount\":\"" + amount + "\"" +
                 "}";
         WireMockServer wireMockServer = new WireMockServer(port);
         wireMockServer.start();
+        configureFor(host, port);
         wireMockServer.givenThat(post(urlPathEqualTo("/update"))
-                .willReturn(aResponse().withStatus(OK.value())));
+                .withRequestBody(equalToJson(jsonRequest))
+                .willReturn(ok()));
 
         kafkaTemplate.send(topic, eventMessage);
+        TimeUnit.SECONDS.sleep(3);
 
-        wireMockServer.verify(1, postRequestedFor(urlEqualTo("/update")));
+        wireMockServer.verify(exactly(1), postRequestedFor(urlPathEqualTo("/update")));
         wireMockServer.stop();
     }
 
