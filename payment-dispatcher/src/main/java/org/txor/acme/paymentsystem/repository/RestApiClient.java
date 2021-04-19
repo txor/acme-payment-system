@@ -18,13 +18,18 @@ public class RestApiClient implements ApiClient {
 
     private final RestTemplate restTemplate;
     private final PaymentConverter paymentConverter;
-    private final String updateUrl;
+    private final String host;
+    private final String port;
 
     @Autowired
-    RestApiClient(RestTemplateBuilder builder, PaymentConverter paymentConverter, @Value("${payment-dispatcher.update-url}") String updateUrl) {
+    RestApiClient(RestTemplateBuilder builder,
+                  PaymentConverter paymentConverter,
+                  @Value("${payment-dispatcher.update.host}") String host,
+                  @Value("${payment-dispatcher.update.port}") String port) {
         this.restTemplate = builder.build();
         this.paymentConverter = paymentConverter;
-        this.updateUrl = updateUrl;
+        this.host = host;
+        this.port = port;
     }
 
     @Override
@@ -32,6 +37,6 @@ public class RestApiClient implements ApiClient {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         String request = paymentConverter.convert(payment);
-        restTemplate.postForEntity(updateUrl, new HttpEntity<>(request, headers), String.class);
+        restTemplate.postForEntity("http://" + host + ":" + port + "/update", new HttpEntity<>(request, headers), String.class);
     }
 }
