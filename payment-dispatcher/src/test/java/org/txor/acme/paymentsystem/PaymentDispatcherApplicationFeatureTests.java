@@ -1,31 +1,25 @@
 package org.txor.acme.paymentsystem;
 
+import com.github.tomakehurst.wiremock.WireMockServer;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.test.context.EmbeddedKafka;
-import org.springframework.test.web.client.MockRestServiceServer;
-import org.springframework.web.client.RestTemplate;
 
-import java.time.Duration;
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static org.springframework.http.HttpStatus.OK;
 
-import static org.springframework.http.HttpMethod.POST;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
-import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
-
-@SpringBootTest()
+@SpringBootTest
 @EmbeddedKafka(partitions = 1, brokerProperties = {"listeners=PLAINTEXT://localhost:9092", "port=9092"})
 class PaymentDispatcherApplicationFeatureTests {
 
     @Value("${payment-dispatcher.topic}")
     private String topic;
 
-    @Value("${payment-dispatcher.update-url}")
-    private String updateHost;
+    @Value("${payment-dispatcher.update.port}")
+    private Integer port;
 
     @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
@@ -52,15 +46,15 @@ class PaymentDispatcherApplicationFeatureTests {
                 "  \"credit_card\": \"" + creditCard + "\",\n" +
                 "  \"amount\": \"" + amount + "\"\n" +
                 "}";
-        MockRestServiceServer mockServer = MockRestServiceServer.createServer(new RestTemplate());
-        mockServer.expect(requestTo(updateHost))
-                .andExpect(method(POST))
-                .andExpect(content().json(jsonRequest))
-                .andRespond(withSuccess());
+        WireMockServer wireMockServer = new WireMockServer(port);
+        wireMockServer.start();
+        wireMockServer.givenThat(post(urlPathEqualTo("/update"))
+                .willReturn(aResponse().withStatus(OK.value())));
 
         kafkaTemplate.send(topic, eventMessage);
 
-        mockServer.verify(Duration.ofSeconds(10));
+        wireMockServer.verify(1, postRequestedFor(urlEqualTo("/update")));
+        wireMockServer.stop();
     }
 
 }
