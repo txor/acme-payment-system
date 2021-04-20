@@ -27,17 +27,17 @@ services:
       - PAYMENTDISPATCHER_GROUP=online-group
       - PAYMENTDISPATCHER_TOPIC=online
       - PAYMENTDISPATCHER_UPDATE_HOST=payment-checker
-      - PAYMENTDISPATCHER_UPDATE_PORT=8080
+      - PAYMENTDISPATCHER_UPDATE_PORT=8081
     depends_on:
       - kafka-server
-      - payment-updater
+      - payment-checker
 
   payment-checker:
     image: payment-checker:0.0.1-SNAPSHOT
     networks:
       - kafka-net
     ports:
-      - 8080:8080
+      - 8081:8080
     environment:
       - PAYMENTCHECKER_CHECK_HOST=api-producer
       - PAYMENTCHECKER_CHECK_PORT=9000
@@ -54,9 +54,9 @@ services:
     ports:
       - 8080:8080
     environment:
-      - PAYMENTUPDATER_URL=jdbc:postgresql://postgress:5432/payments
-      - PAYMENTUPDATER_USERNAME=tech
-      - PAYMENTUPDATER_PASSWORD=test
+      - PAYMENTUPDATER_DB_URL=jdbc:postgresql://postgress:5432/payments
+      - PAYMENTUPDATER_DB_USERNAME=tech
+      - PAYMENTUPDATER_DB_PASSWORD=test
     depends_on:
       - postgress
 
