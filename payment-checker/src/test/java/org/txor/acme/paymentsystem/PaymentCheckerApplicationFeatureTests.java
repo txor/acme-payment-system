@@ -16,6 +16,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlPathEqualTo;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.txor.acme.paymentsystem.tools.TestMother.createJsonRequest;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -38,12 +39,7 @@ class PaymentCheckerApplicationFeatureTests {
 
     @Test
     public void getAPaymentUpdateThenCheckThatIsOkInThePaymentApiThenSendToUpdateApi() throws Exception {
-        String paymentId = "1234";
-        String accountId = "836";
-        String paymentType = "online";
-        String creditCard = "632456";
-        String amount = "52";
-        String paymentJsonRequest = createJsonRequest(paymentId, accountId, paymentType, creditCard, amount);
+        String paymentJsonRequest = createJsonRequest();
         WireMockServer paymentApiMockServer = new WireMockServer(checkPort);
         paymentApiMockServer.start();
         paymentApiMockServer.givenThat(WireMock.post(urlPathEqualTo("/check"))
@@ -64,16 +60,6 @@ class PaymentCheckerApplicationFeatureTests {
         paymentApiMockServer.stop();
         updateApiMockServer.verify(exactly(1), postRequestedFor(urlPathEqualTo("/update")));
         updateApiMockServer.stop();
-    }
-
-    private String createJsonRequest(String paymentId, String accountId, String paymentType, String creditCard, String amount) {
-        return "{" +
-                "\"payment_id\":\"" + paymentId + "\"," +
-                "\"account_id\":\"" + accountId + "\"," +
-                "\"payment_type\":\"" + paymentType + "\"," +
-                "\"credit_card\":\"" + creditCard + "\"," +
-                "\"amount\":\"" + amount + "\"" +
-                "}";
     }
 
 }

@@ -20,7 +20,7 @@ class CheckServiceTest {
     private UpdateApiClient updateApiClient;
 
     @Test
-    public void shouldCheckThaPaymentAndIfOkSendItToUpdating() {
+    public void shouldCheckThaPaymentAndIfOkSendItToUpdating() throws InvalidPaymentException {
         Payment payment = new Payment();
         CheckService checkService = new CheckService(checkApiClient, updateApiClient);
 
@@ -31,7 +31,7 @@ class CheckServiceTest {
     }
 
     @Test
-    public void shouldNotSendThePaymentToUpdatingOnPaymentCheckFail() {
+    public void shouldNotSendThePaymentToUpdatingOnPaymentCheckFail() throws InvalidPaymentException {
         Payment payment = new Payment();
         when(checkApiClient.checkPayment(any(Payment.class))).thenReturn(PaymentStatus.KO);
         CheckService checkService = new CheckService(checkApiClient, updateApiClient);

@@ -2,5 +2,5 @@ package org.txor.acme.paymentsystem.domain;
 
 public interface CheckApiClient {
 
-    PaymentStatus checkPayment(Payment any);
+    PaymentStatus checkPayment(Payment any) throws InvalidPaymentException;
 }
