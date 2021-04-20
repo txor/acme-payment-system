@@ -17,6 +17,13 @@ import java.time.Instant;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.txor.acme.paymentsystem.tools.TestMother.accountId;
+import static org.txor.acme.paymentsystem.tools.TestMother.amount;
+import static org.txor.acme.paymentsystem.tools.TestMother.createJsonRequest;
+import static org.txor.acme.paymentsystem.tools.TestMother.createJsonRequestWithAccountId;
+import static org.txor.acme.paymentsystem.tools.TestMother.creditCard;
+import static org.txor.acme.paymentsystem.tools.TestMother.paymentId;
+import static org.txor.acme.paymentsystem.tools.TestMother.paymentType;
 
 @SpringBootTest(classes = PaymentUpdaterApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class PaymentUpdaterApplicationFeatureTests {
@@ -32,25 +39,9 @@ class PaymentUpdaterApplicationFeatureTests {
 
     @Test
     void storePaymentDataAndUpdateAccountLastPaymentDateOnDatabase() {
-        long paymentId = 1234L;
-        long accountId = 1L;
-        String paymentType = "online";
-        String creditCard = "4242424242424242";
-        long amount = 543L;
         Instant updateTime = Instant.now();
-        String jsonRequest = "{\n" +
-                "  \"paymentId\": \"" + paymentId + "\",\n" +
-                "  \"accountId\": \"" + accountId + "\",\n" +
-                "  \"paymentType\": \"" + paymentType + "\",\n" +
-                "  \"creditCard\": \"" + creditCard + "\",\n" +
-                "  \"amount\": \"" + amount + "\"\n" +
-                "}";
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> requestEntity = new HttpEntity<>(jsonRequest, headers);
-        ResponseEntity<String> result = this.restTemplate
-                .postForEntity("http://localhost:" + port + "/update", requestEntity, String.class);
+        ResponseEntity<String> result = post(createJsonRequest());
 
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
         Optional<PaymentEntity> persistedPayment = this.paymentTestRepository.findById(paymentId);
@@ -70,29 +61,25 @@ class PaymentUpdaterApplicationFeatureTests {
 
     @Test
     void doNotUpdateDataWhenTheAccountDoesNotExist() {
-        long paymentId = 5678L;
-        long accountId = 999L; // Non existing account
-        String paymentType = "online";
-        String creditCard = "4242424242424242";
-        long amount = 543L;
-        Instant updateTime = Instant.now();
-        String jsonRequest = "{\n" +
-                "  \"paymentId\": \"" + paymentId + "\",\n" +
-                "  \"accountId\": \"" + accountId + "\",\n" +
-                "  \"paymentType\": \"" + paymentType + "\",\n" +
-                "  \"creditCard\": \"" + creditCard + "\",\n" +
-                "  \"amount\": \"" + amount + "\"\n" +
-                "}";
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> requestEntity = new HttpEntity<>(jsonRequest, headers);
-        ResponseEntity<String> result = this.restTemplate
-                .postForEntity("http://localhost:" + port + "/update", requestEntity, String.class);
+        ResponseEntity<String> result = post(createJsonRequestWithAccountId(543));
 
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         Optional<PaymentEntity> persistedPayment = this.paymentTestRepository.findById(paymentId);
         assertThat(persistedPayment).isEmpty();
     }
 
+    @Test
+    public void doNothingForABadRequest() {
+        ResponseEntity<String> result = post("{\"not valid\":\"json\"}");
+
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+    }
+
+    private ResponseEntity<String> post(String message) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> requestEntity = new HttpEntity<>(message, headers);
+        return this.restTemplate
+                .postForEntity("http://localhost:" + port + "/update", requestEntity, String.class);
+    }
 }
