@@ -15,23 +15,27 @@ import org.txor.acme.paymentsystem.domain.UpdateApiClient;
 public class RestUpdateApiClient implements UpdateApiClient {
 
     private final RestTemplate restTemplate;
+    private final PaymentConverter paymentConverter;
     private final String host;
     private final String port;
 
     @Autowired
     RestUpdateApiClient(RestTemplateBuilder builder,
+                        PaymentConverter paymentConverter,
                         @Value("${payment-checker.update.host}") String host,
                         @Value("${payment-checker.update.port}") String port) {
         this.restTemplate = builder.build();
+        this.paymentConverter = paymentConverter;
         this.host = host;
         this.port = port;
     }
 
     @Override
-    public void updatePayment(Payment any) {
+    public void updatePayment(Payment payment) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        restTemplate.postForEntity("http://" + host + ":" + port + "/update", new HttpEntity<>("{}", headers), String.class);
+        String request = paymentConverter.convert(payment);
+        restTemplate.postForEntity("http://" + host + ":" + port + "/update", new HttpEntity<>(request, headers), String.class);
     }
 
 }
