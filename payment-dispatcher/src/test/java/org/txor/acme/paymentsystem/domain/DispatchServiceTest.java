@@ -5,16 +5,16 @@ import org.junit.jupiter.api.Test;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.txor.acme.paymentsystem.tools.TestMother.createPayment;
 
 class DispatchServiceTest {
 
     @Test
     public void dispatchShouldSendTheReceivedPayment() throws InvalidPaymentException {
-        Payment payment = new Payment("1234", "836", "type", "632456", "52");
         ApiClient apiClient = mock(ApiClient.class);
         DispatchService dispatchService = new DispatchService(apiClient);
 
-        dispatchService.dispatch(payment);
+        dispatchService.dispatch(createPayment());
 
         verify(apiClient).sendUpdateData(any(Payment.class));
     }

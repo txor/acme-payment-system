@@ -4,26 +4,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.txor.acme.paymentsystem.tools.TestMother.accountId;
+import static org.txor.acme.paymentsystem.tools.TestMother.amount;
+import static org.txor.acme.paymentsystem.tools.TestMother.createJsonPayment;
+import static org.txor.acme.paymentsystem.tools.TestMother.createPayment;
+import static org.txor.acme.paymentsystem.tools.TestMother.creditCard;
+import static org.txor.acme.paymentsystem.tools.TestMother.paymentId;
+import static org.txor.acme.paymentsystem.tools.TestMother.paymentType;
 
 class PaymentConverterTest {
 
     @Test
     public void shouldConvertJsonStringToPayment() throws InvalidPaymentException {
-        String paymentId = "1234";
-        String accountId = "836";
-        String paymentType = "type";
-        String creditCard = "632456";
-        String amount = "52";
-        String jsonRequest = "{\n" +
-                "  \"payment_id\": \"" + paymentId + "\",\n" +
-                "  \"account_id\": \"" + accountId + "\",\n" +
-                "  \"payment_type\": \"" + paymentType + "\",\n" +
-                "  \"credit_card\": \"" + creditCard + "\",\n" +
-                "  \"amount\": \"" + amount + "\"\n" +
-                "}";
         PaymentConverter paymentConverter = new PaymentConverter(new ObjectMapper());
 
-        Payment result = paymentConverter.convert(jsonRequest);
+        Payment result = paymentConverter.convert(createJsonPayment());
 
         assertThat(result.getPaymentId()).isEqualTo(paymentId);
         assertThat(result.getAccountId()).isEqualTo(accountId);
@@ -34,24 +29,11 @@ class PaymentConverterTest {
 
     @Test
     public void shouldConvertPaymentToJsonString() throws InvalidPaymentException {
-        String paymentId = "1234";
-        String accountId = "836";
-        String paymentType = "type";
-        String creditCard = "632456";
-        String amount = "52";
-        Payment payment = new Payment(paymentId, accountId, paymentType, creditCard, amount);
-        String jsonRequest = "{" +
-                "\"payment_id\":\"" + paymentId + "\"," +
-                "\"account_id\":\"" + accountId + "\"," +
-                "\"payment_type\":\"" + paymentType + "\"," +
-                "\"credit_card\":\"" + creditCard + "\"," +
-                "\"amount\":\"" + amount + "\"" +
-                "}";
         PaymentConverter paymentConverter = new PaymentConverter(new ObjectMapper());
 
-        String result = paymentConverter.convert(payment);
+        String result = paymentConverter.convert(createPayment());
 
-        assertThat(result).isEqualTo(jsonRequest);
+        assertThat(result).isEqualTo(createJsonPayment());
     }
 
 }
