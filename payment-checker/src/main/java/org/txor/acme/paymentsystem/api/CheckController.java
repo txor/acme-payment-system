@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.txor.acme.paymentsystem.domain.CheckService;
 import org.txor.acme.paymentsystem.domain.Payment;
 
+import javax.validation.Valid;
+
 @RestController
 public class CheckController {
 
@@ -14,7 +16,7 @@ public class CheckController {
     private CheckService checkService;
 
     @PostMapping("/update")
-    public void check(@RequestBody Payment payment) {
+    public void check(@Valid @RequestBody Payment payment) {
         checkService.check(payment);
     }
 }

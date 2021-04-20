@@ -3,17 +3,24 @@ package org.txor.acme.paymentsystem.domain;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import javax.validation.constraints.NotNull;
+
 @JsonPropertyOrder({"payment_id", "account_id", "payment_type", "credit_card", "amount"})
 public class Payment {
 
+    @NotNull
     @JsonProperty("payment_id")
     private String paymentId;
+    @NotNull
     @JsonProperty("account_id")
     private String accountId;
+    @NotNull
     @JsonProperty("payment_type")
     private String paymentType;
+    @NotNull
     @JsonProperty("credit_card")
     private String creditCard;
+    @NotNull
     private String amount;
 
     public Payment() {
