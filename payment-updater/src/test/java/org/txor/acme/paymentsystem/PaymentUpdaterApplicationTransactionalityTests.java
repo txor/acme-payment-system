@@ -20,6 +20,9 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.txor.acme.paymentsystem.tools.TestMother.accountId;
+import static org.txor.acme.paymentsystem.tools.TestMother.createJsonRequest;
+import static org.txor.acme.paymentsystem.tools.TestMother.paymentId;
 
 @SpringBootTest(classes = {PaymentUpdaterApplication.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class PaymentUpdaterApplicationTransactionalityTests {
@@ -38,24 +41,12 @@ class PaymentUpdaterApplicationTransactionalityTests {
 
     @Test
     void ifThereIsAnUnexpectedErrorUpdatingDataThereWillBeNoUpdatesInTheDatabase() {
-        long paymentId = 1234L;
-        long accountId = 1L;
-        String paymentType = "online";
-        String creditCard = "4242424242424242";
-        long amount = 543L;
-        String jsonRequest = "{\n" +
-                "  \"paymentId\": \"" + paymentId + "\",\n" +
-                "  \"accountId\": \"" + accountId + "\",\n" +
-                "  \"paymentType\": \"" + paymentType + "\",\n" +
-                "  \"creditCard\": \"" + creditCard + "\",\n" +
-                "  \"amount\": \"" + amount + "\"\n" +
-                "}";
         when(accountDatabaseRepository.findById(any())).thenReturn(Optional.of(new AccountEntity(accountId)));
         when(accountDatabaseRepository.save(any())).thenThrow(new RuntimeException());
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> requestEntity = new HttpEntity<>(jsonRequest, headers);
+        HttpEntity<String> requestEntity = new HttpEntity<>(createJsonRequest(), headers);
         ResponseEntity<String> result = this.restTemplate
                 .postForEntity("http://localhost:" + port + "/update", requestEntity, String.class);
 

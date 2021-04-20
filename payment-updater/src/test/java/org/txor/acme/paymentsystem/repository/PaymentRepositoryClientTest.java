@@ -10,6 +10,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.txor.acme.paymentsystem.tools.TestMother.createPayment;
+import static org.txor.acme.paymentsystem.tools.TestMother.createPaymentEntity;
 
 @ExtendWith(MockitoExtension.class)
 class PaymentRepositoryClientTest {
@@ -22,8 +24,8 @@ class PaymentRepositoryClientTest {
 
     @Test
     public void saveShouldConvertAndPersistTheGivenPayment() {
-        Payment payment = new Payment(1234L, 4321L, "offline", "4242424242424242", 60L);
-        PaymentEntity paymentEntity = new PaymentEntity(1234L, new AccountEntity(4321L), "offline", "4242424242424242", 60L);
+        Payment payment = createPayment();
+        PaymentEntity paymentEntity = createPaymentEntity();
         when(paymentConverter.convert(any(Payment.class))).thenReturn(paymentEntity);
         PaymentRepositoryClient paymentRepositoryClient = new PaymentRepositoryClient(paymentDatabaseRepository, paymentConverter);
 

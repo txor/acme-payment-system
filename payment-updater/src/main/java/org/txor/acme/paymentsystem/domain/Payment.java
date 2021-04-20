@@ -8,7 +8,7 @@ public class Payment {
 
     @NotNull
     @JsonProperty("payment_id")
-    private final Long paymentId;
+    private final String paymentId;
     @NotNull
     @JsonProperty("account_id")
     private final Long accountId;
@@ -21,7 +21,7 @@ public class Payment {
     @NotNull
     private final Long amount;
 
-    public Payment(Long paymentId, Long accountId, String paymentType, String creditCard, Long amount) {
+    public Payment(String paymentId, Long accountId, String paymentType, String creditCard, Long amount) {
         this.paymentId = paymentId;
         this.accountId = accountId;
         this.paymentType = paymentType;
@@ -29,7 +29,7 @@ public class Payment {
         this.amount = amount;
     }
 
-    public Long getPaymentId() {
+    public String getPaymentId() {
         return paymentId;
     }
 

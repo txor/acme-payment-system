@@ -14,13 +14,15 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
+import static org.txor.acme.paymentsystem.tools.TestMother.accountId;
+import static org.txor.acme.paymentsystem.tools.TestMother.createPayment;
 
 class UpdateServiceTest {
 
     @Test
     public void updateShouldPersistPaymentAndUpdateAccountLastPaymentDate() {
         Long accountId = 1234L;
-        Payment payment = new Payment(4312L, accountId, "online", "4111111111111111", 195L);
+        Payment payment = createPayment();
         AccountRepository accountRepository = mock(AccountRepository.class);
         when(accountRepository.loadAccount(anyLong())).thenReturn(Optional.of(new Account(accountId)));
         PaymentRepository paymentRepository = mock(PaymentRepository.class);
@@ -34,8 +36,7 @@ class UpdateServiceTest {
 
     @Test
     public void updateShouldThrowExceptionIfTheRelatedAccountDoesNotExist() {
-        Long accountId = 1234L;
-        Payment payment = new Payment(4312L, accountId, "online", "4111111111111111", 195L);
+        Payment payment = createPayment();
         AccountRepository accountRepository = mock(AccountRepository.class);
         when(accountRepository.loadAccount(anyLong())).thenReturn(Optional.empty());
         PaymentRepository paymentRepository = mock(PaymentRepository.class);

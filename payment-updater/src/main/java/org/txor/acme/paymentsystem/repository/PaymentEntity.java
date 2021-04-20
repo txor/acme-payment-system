@@ -11,7 +11,7 @@ import javax.persistence.Table;
 public class PaymentEntity {
 
     @Id
-    private Long paymentId;
+    private String paymentId;
     @ManyToOne
     @JoinColumn(name = "account_id")
     private AccountEntity accountId;
@@ -22,7 +22,7 @@ public class PaymentEntity {
     protected PaymentEntity() {
     }
 
-    public PaymentEntity(Long paymentId, AccountEntity accountId, String paymentType, String creditCard, Long amount) {
+    public PaymentEntity(String paymentId, AccountEntity accountId, String paymentType, String creditCard, Long amount) {
 
         this.paymentId = paymentId;
         this.accountId = accountId;
@@ -31,7 +31,7 @@ public class PaymentEntity {
         this.amount = amount;
     }
 
-    public Long getPaymentId() {
+    public String getPaymentId() {
         return paymentId;
     }
 

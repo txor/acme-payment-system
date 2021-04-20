@@ -1,11 +1,12 @@
 package org.txor.acme.paymentsystem.tools;
 
 import org.txor.acme.paymentsystem.domain.Payment;
+import org.txor.acme.paymentsystem.repository.AccountEntity;
+import org.txor.acme.paymentsystem.repository.PaymentEntity;
 
 public class TestMother {
 
-
-    public static final Long paymentId = 1234L;
+    public static final String paymentId = "1234-23e34";
     public static final Long accountId = 1L;
     public static final String paymentType = "online";
     public static final String creditCard = "4242424242424242";
@@ -29,4 +30,7 @@ public class TestMother {
         return new Payment(paymentId, accountId, paymentType, creditCard, amount);
     }
 
+    public static PaymentEntity createPaymentEntity() {
+        return new PaymentEntity(paymentId, new AccountEntity(accountId), paymentType, creditCard, amount);
+    }
 }
