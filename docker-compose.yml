@@ -10,6 +10,9 @@ services:
     image: payment-dispatcher:0.0.1-SNAPSHOT
     networks:
       - kafka-net
+    # Expose the debugging port
+    #ports:
+      #- 8011:8000
     environment:
       - PAYMENTDISPATCHER_KAFKA_SERVERS=kafka-server:9092
       - PAYMENTDISPATCHER_KAFKA_GROUP=offline-group
@@ -19,48 +22,61 @@ services:
     depends_on:
       - kafka-server
       - payment-updater
+    # Enable debugging into the container
+    #entrypoint: [ "java","-agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=n","-Djava.security.egd=file:/dev/./urandom","-jar","payment-dispatcher.jar" ]
 
   payment-dispatcher-online:
     image: payment-dispatcher:0.0.1-SNAPSHOT
     networks:
       - kafka-net
+    # Expose the debugging port
+    #ports:
+      #- 8012:8000
     environment:
       - PAYMENTDISPATCHER_KAFKA_SERVERS=kafka-server:9092
       - PAYMENTDISPATCHER_KAFKA_GROUP=online-group
       - PAYMENTDISPATCHER_KAFKA_TOPIC=online
       - PAYMENTDISPATCHER_UPDATE_HOST=payment-checker
-      - PAYMENTDISPATCHER_UPDATE_PORT=8081
+      - PAYMENTDISPATCHER_UPDATE_PORT=8080
     depends_on:
       - kafka-server
       - payment-checker
+    # Enable debugging into the container
+    #entrypoint: [ "java","-agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=n","-Djava.security.egd=file:/dev/./urandom","-jar","payment-dispatcher.jar" ]
 
   payment-checker:
     image: payment-checker:0.0.1-SNAPSHOT
     networks:
       - kafka-net
-    ports:
-      - 8081:8080
+    # Expose the debugging port
+    #ports:
+      #- 8013:8000
     environment:
       - PAYMENTCHECKER_CHECK_HOST=api-producer
-      - PAYMENTCHECKER_CHECK_PORT=9000
+      - PAYMENTCHECKER_CHECK_PORT=8080
       - PAYMENTCHECKER_UPDATE_HOST=payment-updater
       - PAYMENTCHECKER_UPDATE_PORT=8080
     depends_on:
       - api-producer
       - payment-updater
+    # Enable debugging into the container
+    #entrypoint: [ "java","-agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=n","-Djava.security.egd=file:/dev/./urandom","-jar","payment-checker.jar" ]
 
   payment-updater:
     image: payment-updater:0.0.1-SNAPSHOT
     networks:
       - kafka-net
-    ports:
-      - 8080:8080
+    # Expose the debugging port
+    #ports:
+      #- 8014:8000
     environment:
       - PAYMENTUPDATER_DB_URL=jdbc:postgresql://postgress:5432/payments
       - PAYMENTUPDATER_DB_USERNAME=tech
       - PAYMENTUPDATER_DB_PASSWORD=test
     depends_on:
       - postgress
+    # Enable debugging into the container
+    #entrypoint: [ "java","-agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=n","-Djava.security.egd=file:/dev/./urandom","-jar","payment-updater.jar" ]
 
   zookeeper-server:
     image: bitnami/zookeeper:latest
@@ -112,15 +128,15 @@ services:
       - ./ApiAndProducer/bin:/app/
     command:
       [
-        "./wait-for-it.sh",
-        "postgress:5432",
-        "kafka-server:9092",
-        "-t",
-        "100",
-        "--",
-        "java",
-        "-jar",
-        "app.jar",
+          "./wait-for-it.sh",
+          "postgress:5432",
+          "kafka-server:9092",
+          "-t",
+          "100",
+          "--",
+          "java",
+          "-jar",
+          "app.jar",
       ]
     depends_on:
       - postgress

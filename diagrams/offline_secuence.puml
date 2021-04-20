@@ -3,7 +3,7 @@
 Title Offline payment flow
 
 queue "Kafka" as K
-participant "Payment dispatcher" as PD
+participant "Payment dispatcher" as PD <<offline>>
 participant "Payment updater" as PU
 database "Database" as DB
 

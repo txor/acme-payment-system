@@ -3,7 +3,7 @@
 Title Online payment flow
 
 queue "Kafka" as K
-participant "Payment dispatcher" as PD
+participant "Payment dispatcher" as PD <<online>>
 participant "Payment checker" as PP
 participant "Payment updater" as PU
 participant "Payment API" as PA

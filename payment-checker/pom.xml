@@ -74,6 +74,10 @@
                                 <argument>
                                     PROPERTIES_FILE=./src/main/resources/application.properties
                                 </argument>
+                                <argument>--build-arg</argument>
+                                <argument>
+                                    BANNER_FILE=./src/main/resources/banner.txt
+                                </argument>
                             </arguments>
                         </configuration>
                     </execution>
