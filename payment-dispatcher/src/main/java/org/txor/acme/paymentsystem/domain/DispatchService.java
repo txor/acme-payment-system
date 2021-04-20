@@ -8,8 +8,8 @@ public class DispatchService {
         this.apiClient = apiClient;
     }
 
-    public void dispatch(Payment message) throws InvalidPaymentException {
-        apiClient.sendUpdateData(message);
+    public UpdateStatus dispatch(Payment message) throws InvalidPaymentException {
+        return apiClient.sendUpdateData(message);
     }
 
 }

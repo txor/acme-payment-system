@@ -11,6 +11,7 @@ import org.txor.acme.paymentsystem.domain.DispatchService;
 import org.txor.acme.paymentsystem.domain.InvalidPaymentException;
 import org.txor.acme.paymentsystem.domain.Payment;
 import org.txor.acme.paymentsystem.domain.PaymentConverter;
+import org.txor.acme.paymentsystem.domain.UpdateStatus;
 
 @Component
 public class KafkaConsumer {
@@ -30,10 +31,13 @@ public class KafkaConsumer {
     public void receive(ConsumerRecord<String, String> consumerRecord, Acknowledgment acknowledgment) {
         try {
             Payment payment = paymentConverter.convert(consumerRecord.value());
-            dispatchService.dispatch(payment);
-            acknowledgment.acknowledge();
+            UpdateStatus dispatch = dispatchService.dispatch(payment);
+            if (UpdateStatus.Ok.equals(dispatch)) {
+                acknowledgment.acknowledge();
+            }
         } catch (InvalidPaymentException e) {
             LOGGER.error(e.getLocalizedMessage());
+            acknowledgment.acknowledge();
         }
     }
 

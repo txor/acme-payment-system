@@ -2,21 +2,24 @@ package org.txor.acme.paymentsystem.domain;
 
 import org.junit.jupiter.api.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.txor.acme.paymentsystem.tools.TestMother.createPayment;
 
 class DispatchServiceTest {
 
     @Test
-    public void dispatchShouldSendTheReceivedPayment() throws InvalidPaymentException {
+    public void dispatchShouldSendTheReceivedPaymentAndReturnBackTheResult() throws InvalidPaymentException {
         ApiClient apiClient = mock(ApiClient.class);
+        when(apiClient.sendUpdateData(any(Payment.class))).thenReturn(UpdateStatus.Ok);
         DispatchService dispatchService = new DispatchService(apiClient);
 
-        dispatchService.dispatch(createPayment());
+        UpdateStatus status = dispatchService.dispatch(createPayment());
 
-        verify(apiClient).sendUpdateData(any(Payment.class));
+        assertThat(status).isEqualTo(UpdateStatus.Ok);
     }
 
 }
