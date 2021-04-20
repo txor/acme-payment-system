@@ -121,19 +121,19 @@ class PaymentCheckerApplicationFeatureTests {
     }
 
     private void setupOkPaymentApi() {
-        paymentApiMockServer.givenThat(WireMock.post(urlPathEqualTo("/check"))
+        paymentApiMockServer.givenThat(WireMock.post(urlPathEqualTo("/payment"))
                 .withRequestBody(equalToJson(createJsonRequest()))
                 .willReturn(ok()));
     }
 
     private void setupClientErrorPaymentApi() {
-        paymentApiMockServer.givenThat(WireMock.post(urlPathEqualTo("/check"))
+        paymentApiMockServer.givenThat(WireMock.post(urlPathEqualTo("/payment"))
                 .withRequestBody(equalToJson(createJsonRequest()))
                 .willReturn(notFound()));
     }
 
     private void setupServerErrorPaymentApi() {
-        paymentApiMockServer.givenThat(WireMock.post(urlPathEqualTo("/check"))
+        paymentApiMockServer.givenThat(WireMock.post(urlPathEqualTo("/payment"))
                 .withRequestBody(equalToJson(createJsonRequest()))
                 .willReturn(serverError()));
     }
@@ -151,7 +151,7 @@ class PaymentCheckerApplicationFeatureTests {
     }
 
     private void verifyOneRequestToPaymentApi() {
-        paymentApiMockServer.verify(exactly(1), postRequestedFor(urlPathEqualTo("/check")));
+        paymentApiMockServer.verify(exactly(1), postRequestedFor(urlPathEqualTo("/payment")));
         paymentApiMockServer.resetAll();
     }
 

@@ -35,7 +35,7 @@ class RestCheckApiClientTest {
 
     @Test
     public void shouldSendThePaymentAsJson() throws InvalidPaymentException {
-        this.server.expect(requestTo("http://" + host + ":" + port + "/check"))
+        this.server.expect(requestTo("http://" + host + ":" + port + "/payment"))
                 .andExpect(method(POST))
                 .andExpect(content().json(createJsonRequest()))
                 .andRespond(withSuccess());
