@@ -70,6 +70,10 @@
                                 <argument>
                                     JAR_FILE=./target/${project.artifactId}-${project.version}.jar
                                 </argument>
+                                <argument>--build-arg</argument>
+                                <argument>
+                                    PROPERTIES_FILE=./src/main/resources/application.properties
+                                </argument>
                             </arguments>
                         </configuration>
                     </execution>

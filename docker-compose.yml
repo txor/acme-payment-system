@@ -6,12 +6,59 @@ networks:
 
 services:
 
-  payment-dispatcher:
+  payment-dispatcher-offline:
     image: payment-dispatcher:0.0.1-SNAPSHOT
+    networks:
+      - kafka-net
+    environment:
+      - PAYMENTDISPATCHER_GROUP=offline-group
+      - PAYMENTDISPATCHER_TOPIC=offline
+      - PAYMENTDISPATCHER_UPDATE_HOST=payment-updater
+      - PAYMENTDISPATCHER_UPDATE_PORT=8080
+    depends_on:
+      - kafka-server
+      - payment-updater
+
+  payment-dispatcher-online:
+    image: payment-dispatcher:0.0.1-SNAPSHOT
+    networks:
+      - kafka-net
+    environment:
+      - PAYMENTDISPATCHER_GROUP=online-group
+      - PAYMENTDISPATCHER_TOPIC=online
+      - PAYMENTDISPATCHER_UPDATE_HOST=payment-checker
+      - PAYMENTDISPATCHER_UPDATE_PORT=8080
+    depends_on:
+      - kafka-server
+      - payment-updater
+
   payment-checker:
     image: payment-checker:0.0.1-SNAPSHOT
+    networks:
+      - kafka-net
+    ports:
+      - 8080:8080
+    environment:
+      - PAYMENTCHECKER_CHECK_HOST=api-producer
+      - PAYMENTCHECKER_CHECK_PORT=9000
+      - PAYMENTCHECKER_UPDATE_HOST=payment-updater
+      - PAYMENTCHECKER_UPDATE_PORT=8080
+    depends_on:
+      - api-producer
+      - payment-updater
+
   payment-updater:
     image: payment-updater:0.0.1-SNAPSHOT
+    networks:
+      - kafka-net
+    ports:
+      - 8080:8080
+    environment:
+      - PAYMENTUPDATER_URL=jdbc:postgresql://postgress:5432/payments
+      - PAYMENTUPDATER_USERNAME=tech
+      - PAYMENTUPDATER_PASSWORD=test
+    depends_on:
+      - postgress
 
   zookeeper-server:
     image: bitnami/zookeeper:latest

@@ -36,7 +36,7 @@ public class RestCheckApiClient implements CheckApiClient {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         String request = paymentConverter.convert(payment);
-        restTemplate.postForEntity("http://" + host + ":" + port + "/check", new HttpEntity<>(request, headers), String.class);
+        restTemplate.postForEntity("http://" + host + ":" + port + "/payment", new HttpEntity<>(request, headers), String.class);
     }
 
 }

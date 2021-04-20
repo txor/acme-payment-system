@@ -33,6 +33,11 @@
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
@@ -72,6 +77,10 @@
                                 <argument>--build-arg</argument>
                                 <argument>
                                     JAR_FILE=./target/${project.artifactId}-${project.version}.jar
+                                </argument>
+                                <argument>--build-arg</argument>
+                                <argument>
+                                    PROPERTIES_FILE=./src/main/resources/application.properties
                                 </argument>
                             </arguments>
                         </configuration>
