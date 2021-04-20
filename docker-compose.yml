@@ -11,8 +11,9 @@ services:
     networks:
       - kafka-net
     environment:
-      - PAYMENTDISPATCHER_GROUP=offline-group
-      - PAYMENTDISPATCHER_TOPIC=offline
+      - PAYMENTDISPATCHER_KAFKA_SERVERS=kafka-server:9092
+      - PAYMENTDISPATCHER_KAFKA_GROUP=offline-group
+      - PAYMENTDISPATCHER_KAFKA_TOPIC=offline
       - PAYMENTDISPATCHER_UPDATE_HOST=payment-updater
       - PAYMENTDISPATCHER_UPDATE_PORT=8080
     depends_on:
@@ -24,8 +25,9 @@ services:
     networks:
       - kafka-net
     environment:
-      - PAYMENTDISPATCHER_GROUP=online-group
-      - PAYMENTDISPATCHER_TOPIC=online
+      - PAYMENTDISPATCHER_KAFKA_SERVERS=kafka-server:9092
+      - PAYMENTDISPATCHER_KAFKA_GROUP=online-group
+      - PAYMENTDISPATCHER_KAFKA_TOPIC=online
       - PAYMENTDISPATCHER_UPDATE_HOST=payment-checker
       - PAYMENTDISPATCHER_UPDATE_PORT=8081
     depends_on:
